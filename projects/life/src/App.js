@@ -36,12 +36,6 @@ class LifeCanvas extends Component {
      }
     this.life = new Life(props.width, props.height);
 
-    console.log(this.rockPaperScissors());
-    this.life.north = (((this.rockPaperScissors()).split(',').pop()) === 'rock') ? 1 : 0; 
-    this.life.south = (((this.rockPaperScissors()).split(',').pop()) === 'paper') ? 1 : 0;
-    this.life.east = (((this.rockPaperScissors()).split(',').pop()) === 'scissors') ? 1 : 0;
-    this.life.west = (((this.rockPaperScissors()).split(',').pop()) === 'rock') ? 1 : 0;
-    
     this.life.randomize();
   }
 
@@ -49,7 +43,7 @@ class LifeCanvas extends Component {
    * Component did mount
    */
   componentDidMount() {
-
+    this.life.randomize();
     requestAnimationFrame(() => {this.animFrame()});
   }
 
@@ -66,19 +60,15 @@ class LifeCanvas extends Component {
     for(let y = 0; y < height; y++)
       for(let x = 0; x < width; x++) {
         const index = (y * width + x) * 4;
-        const status = cells[y][x];
-        imageData.data[index + 0] = COLORS[status][0];
-        imageData.data[index + 1] = COLORS[status][1];
-        imageData.data[index + 2] = COLORS[status][2];
+        const color = cells[y][x] ? 0xff : 0x00 ;
+        imageData.data[index + 0] = color;
+        imageData.data[index + 1] = color;
+        imageData.data[index + 2] = color;
         imageData.data[index + 3] = 0xff;//alpha 0xff = opaque
         }
     ctx.putImageData(imageData, 0, 0);
-    this.life.north = (((this.rockPaperScissors()).split(',').pop()) === 'rock') ? 1 : 0; 
-    this.life.south = (((this.rockPaperScissors()).split(',').pop()) === 'paper') ? 1 : 0;
-    this.life.east = (((this.rockPaperScissors()).split(',').pop()) === 'scissors') ? 1 : 0;
-    this.life.west = (((this.rockPaperScissors()).split(',').pop()) === 'rock') ? 1 : 0;
-    this.life.step();
     
+    this.life.step();
     requestAnimationFrame(() => { this.animFrame(); });
   }
 
